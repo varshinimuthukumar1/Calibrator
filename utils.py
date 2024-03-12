@@ -47,14 +47,6 @@ def get_correspondences(img_pts, obj_pts, vis=True, img_path=None):
                 matched_obj_pts.append(point[1])
 
     print(matched_img_pts)
-    """
-    x = np.array([x for [x,y] in matched_img_pts])
-    y = np.array([3648 -y for [x,y] in matched_img_pts])
-    
-    # Plot img_pts with matplotlib
-    plt.plot(x,y, 'ro')
-    plt.show()           
-    """
 
     # Convert lists to numpy arrays with the correct shape
     matched_img_pts = np.array(matched_img_pts, dtype=np.float32).reshape(-1, 1, 2)
