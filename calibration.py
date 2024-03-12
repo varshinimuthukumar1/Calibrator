@@ -155,31 +155,9 @@ def calibrate_camera(vis:bool = True):
     cv2.waitKey(0)
 
     ## Calibrate the right camera with an additional rotation of 90 degrees in rvec
-    R90 = rotate_yaw_pitch_roll(180, 0, 0)
-    Rleft,_ = cv2.Rodrigues(rvec)
     # change rvec for a camera at 90 degree rotation from rvec_left
-    Rright = np.dot(R90,Rleft)
-    rvec_right,_ = cv2.Rodrigues(Rright)
 
-    ## Test the calibration
-    img_undist_right = undistort(cv2.imread(TEST_IMAGE_RIGHT), mtx, dist, vis=True)
-    remapped_pts = []
-    objpts = [objpoints[key] for key in objpoints.keys()]
-    for i in objpts:
-        imgpoints2, _ = cv2.projectPoints(np.array(i), rvec_right, tvec, mtx, np.array([]))
-        remapped_pts.append(imgpoints2[0])
-    fx = mtx[0, 0]
-    fy = mtx[1, 1]
-    cx = mtx[0, 2]
-    cy = mtx[1, 2]
-    undistort_pts = cv2.fisheye.undistortPoints(np.array(remapped_pts), mtx, dist)
-    for point in undistort_pts:
-        point[0][0],point[0][1] = point[0][0] * fx + cx, point[0][1]* fy + cy
-        if point[0][0] > 0 and point[0][0] < 2280  and point[0][1] > 0 and point[0][1] < 3648:
-            img_undist_right = cv2.circle(img_undist_right, (int(point[0][0]),int(point[0][1])), 25, (255, 0, 0), -1)
-    img_undist_right = cv2.resize(img_undist_right, DISPLAY_SIZE)
-    cv2.imshow('Test calibration for Right Camera', img_undist_right)
-    cv2.waitKey(0)
+    ## Test the calibration on right image
 
 
     return mtx, dist, rvec, tvec
