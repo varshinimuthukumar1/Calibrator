@@ -22,6 +22,8 @@ def vis_image(img, img_pts):
     return
 
 def get_3dto2d_correspondences(img_pts, obj_pts, vis=True, img_path=None):
+
+    """
     # Convert dictionaries to lists of tuples for easier processing
     img_pts_list = list(img_pts.items())
     obj_pts_list = list(obj_pts.items())
@@ -48,6 +50,19 @@ def get_3dto2d_correspondences(img_pts, obj_pts, vis=True, img_path=None):
     if vis:
         img = cv2.imread(img_path)
         vis_image(img, matched_img_pts)
+
+        """
+    
+    common_keys = set(img_pts).intersection(obj_pts)
+    matched_img_pts = [img_pts[key] for key in common_keys]
+
+    
+
+
+
+    
+
+    
 
     return matched_img_pts, matched_obj_pts
 
@@ -93,8 +108,11 @@ def get_extrinsics(img_pts, obj_pts, mtx, dist, rvecs=None, tvecs=None):
     cx = mtx[0, 2]
     cy = mtx[1, 2]
     undistort_pts = cv2.fisheye.undistortPoints(img_pts, mtx, dist)
-    for point in undistort_pts:
-        point[0][0],point[0][1] = point[0][0] * fx + cx, point[0][1]* fy + cy
+
+    undistort_pts = np.dot(undistort_pts, mtx)
+
+    #for point in undistort_pts:
+    #    point[0][0],point[0][1] = point[0][0] * fx + cx, point[0][1]* fy + cy
     retval, rvecs, tvecs = cv2.solvePnP(obj_pts, undistort_pts, mtx, np.array([]))
     #_, rvecs, tvecs, _ = cv2.solvePnPRansac(
     #obj_pts, undistort_pts, mtx, np.array([]), flags=cv2.SOLVEPNP_P3P

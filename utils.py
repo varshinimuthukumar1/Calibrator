@@ -139,9 +139,9 @@ def read_json(file_path):
 def load_calibration_data():
     
     # Specify the path to your JSON file
-    file_path_left = '/data/kinexon/calibration_challenge/sca-ot-prod-a0cd0015-7fe6-4e9a-8027-e15d532a585f_764979d8_893e5070.calib.points_left.json'
-    file_path_right = '/data/kinexon/calibration_challenge/sca-ot-prod-a0cd0015-7fe6-4e9a-8027-e15d532a585f_764979d8_4f9dd4ef.calib.points_right.json'
-    landmarks = '/data/kinexon/calibration_challenge/landmarks.json'
+    file_path_left = '/home/varshini/code/Calibrator/calibration_challenge/sca-ot-prod-a0cd0015-7fe6-4e9a-8027-e15d532a585f_764979d8_893e5070.calib.points_left.json'
+    file_path_right = '/home/varshini/code/Calibrator/calibration_challenge/sca-ot-prod-a0cd0015-7fe6-4e9a-8027-e15d532a585f_764979d8_4f9dd4ef.calib.points_right.json'
+    landmarks = '/home/varshini/code/Calibrator/calibration_challenge/landmarks.json'
     # Open the JSON file
     image_data_left = read_json(file_path_left)
     image_data_right = read_json(file_path_right)
