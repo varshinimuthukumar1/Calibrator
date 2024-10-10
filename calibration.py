@@ -30,10 +30,11 @@ def vis_image(img: np.array, img_pts: List):
     return
 
 
+
 def get_3dto2d_correspondences(
     img_pts: List, obj_pts: List, vis: bool = True, img_path: str = None
 ):
-    """
+
     # Convert dictionaries to lists of tuples for easier processing
     img_pts_list = list(img_pts.items())
     obj_pts_list = list(obj_pts.items())
@@ -60,10 +61,6 @@ def get_3dto2d_correspondences(
     if vis:
         img = cv2.imread(img_path)
         vis_image(img, matched_img_pts)
-    """
-
-    common_keys = set(img_pts).intersection(obj_pts)
-    matched_img_pts = [img_pts[key] for key in common_keys]
     return matched_img_pts, matched_obj_pts
 
 
@@ -135,8 +132,11 @@ def get_extrinsics(
     cy = mtx[1, 2]
     undistort_pts = cv2.fisheye.undistortPoints(img_pts, mtx, dist)
 
-    undistort_pts = np.dot(undistort_pts, mtx)
-    retval, rvecs, tvecs = cv2.solvePnP(obj_pts, undistort_pts, mtx, np.array([]))
+    for point in undistort_pts:
+        point[0][0],point[0][1] = point[0][0] * fx + cx, point[0][1]* fy + cy
+        _, rvecs, tvecs, _ = cv2.solvePnPRansac(
+    obj_pts, undistort_pts, mtx, np.array([]), flags=cv2.SOLVEPNP_P3P
+    )
     print("rvec : \n", rvecs)
     print("tvec : \n", tvecs)
     return rvecs, tvecs, undistort_pts
@@ -166,8 +166,9 @@ def calibrate_camera(vis: bool = True):
     fy = mtx[1, 1]
     cx = mtx[0, 2]
     cy = mtx[1, 2]
+    ## Apply undistortion
     undistort_pts = cv2.fisheye.undistortPoints(matched_img_points_left, mtx, dist)
-
+    # Matrix multiplication with intrinsic matrix
     for point in undistort_pts:
         point[0][0], point[0][1] = point[0][0] * fx + cx, point[0][1] * fy + cy
         if (
