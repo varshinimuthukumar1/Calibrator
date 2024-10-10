@@ -3,7 +3,7 @@ import cv2
 from matplotlib import pyplot as plt
 import numpy as np
 
-def rotate_yaw_pitch_roll(yaw, pitch, roll):
+def rotate_yaw_pitch_roll(yaw:np.array, pitch:np.array, roll:np.array):
     # Convert yaw, pitch, and roll to radians
     yaw = np.deg2rad(yaw)
     pitch = np.deg2rad(pitch)
@@ -24,7 +24,7 @@ def rotate_yaw_pitch_roll(yaw, pitch, roll):
     R = np.dot(R_z, np.dot(R_y, R_x))
     return R
 
-def get_correspondences(img_pts, obj_pts, vis=True, img_path=None):
+def get_correspondences(img_pts:np.array, obj_pts:np.array, vis:bool=True, img_path:str=None):
     # Convert dictionaries to lists of tuples for easier processing
     img_pts_list = list(img_pts.items())
     obj_pts_list = list(obj_pts.items())
@@ -72,7 +72,7 @@ def get_correspondences(img_pts, obj_pts, vis=True, img_path=None):
         
     return matched_img_pts, matched_obj_pts
 
-def match_points_stereo(image_points_left, image_points_right, object_points):
+def match_points_stereo(image_points_left:np.array, image_points_right:np.array, object_points:np.array):
     # Convert dictionaries to lists of tuples for easier processing
     image_points_left_list = list(image_points_left["annotated_points"].items())
     image_points_right_list = list(image_points_right["annotated_points"].items())
@@ -129,7 +129,7 @@ def match_points_stereo(image_points_left, image_points_right, object_points):
     
     return matched_img_points_left, matched_img_points_right, matched_obj_points
 
-def read_json(file_path):
+def read_json(file_path:str):
     # Open the JSON file
     with open(file_path, 'r') as file:
         # Load the JSON data
